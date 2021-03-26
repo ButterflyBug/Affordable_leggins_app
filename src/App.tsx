@@ -47,17 +47,24 @@ function getLeggins() {
 
 function App() {
   const [leggins, setLeggins] = useState<any>([])
+  const [loaded, setLoaded] = useState<any>(false)
+
   useEffect(() => {
+    if (loaded) {return}
+
     const listOfLeggins = getLeggins()
       .then((response) => response.json())
       .then((json) => json.leggins)
       .then((leggins) => leggins.sort((itemA: any, itemB: any) => itemA.leggin_price - itemB.leggin_price))
-      .then((legginsResult) => setLeggins(legginsResult))
+      .then((legginsResult) => {
+        setLeggins(legginsResult)
+        setLoaded(true)
+      })
   })
 
   return (
     <div className="App">
-      <Table striped bordered hover variant="dark">
+      <Table striped bordered hover variant="dark" responsive>
         <thead>
           <tr>
             <th>Leggin ID</th>
