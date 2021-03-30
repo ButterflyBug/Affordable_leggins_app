@@ -3,20 +3,9 @@ import logo from './logo.svg'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Table from 'react-bootstrap/Table'
+import Spinner from 'react-bootstrap/Spinner'
+import { Container, Row } from 'react-bootstrap'
 
-
-const exampleLeggin = {
-  leggin_id: "12651327",
-  leggin_name: "MP Women's Outline Graphic Leggings - Black",
-  leggin_price: 108,
-  leggin_rrp: 119,
-  sizes: [
-    "XXS",
-    "S"
-  ]
-} as any
-
-const leggins = [exampleLeggin, exampleLeggin]
 
 function SingleLeggin(props: { leggin: any }) {
   const { leggin } = props
@@ -50,7 +39,7 @@ function App() {
   const [loaded, setLoaded] = useState<any>(false)
 
   useEffect(() => {
-    if (loaded) {return}
+    if (loaded) { return }
 
     const listOfLeggins = getLeggins()
       .then((response) => response.json())
@@ -62,22 +51,39 @@ function App() {
       })
   })
 
+  const renderLeggins = () => {
+    if (loaded) {
+      return <Leggins leggins={leggins} />
+    } else {
+      return (
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      )
+    }
+  }
+
   return (
     <div className="App">
-      <Table striped bordered hover variant="dark" responsive>
-        <thead>
-          <tr>
-            <th>Leggin ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Retail price</th>
-            <th>Sizes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <Leggins leggins={leggins} />
-        </tbody>
-      </Table>
+      <Container fluid>
+        <Row>
+          <Table striped bordered hover variant="dark" responsive>
+            <thead>
+              <tr>
+                <th>Leggin ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Retail price</th>
+                <th>Sizes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {renderLeggins()}
+            </tbody>
+          </Table>
+        </Row>
+      </Container>
+
     </div>
   )
 }
